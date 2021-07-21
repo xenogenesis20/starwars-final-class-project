@@ -64,6 +64,16 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+@app.route('/pizza', methods=['GET'])
+# jwt_required on private endpoints
+@jwt_required()
+def jwt_test():
+    current_user_id = get_jwt_identity()
+    # user = User.query.get(current_user_id)
+    
+   
+    return jsonify(user=current_user_id), 200
+
 @app.route('/<user>/favorites', methods=['GET'])
 def get_Favorites(user):
     single_user = User.query.filter_by(user_name=user).first()
@@ -78,6 +88,7 @@ def get_Favorites(user):
     return jsonify(response_body), 200
 
 @app.route('/favorite/planet/<int:id>', methods=['POST','DELETE'])
+
 def add_planet(id):
     request_body = request.get_json()
     if request_body is None or request_body =={}:
